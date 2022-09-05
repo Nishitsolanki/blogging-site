@@ -1,12 +1,15 @@
 # TOPIC: Authorisation
 
 ## Authentication with JWT
+
 - Token generation
 - Token verification
 
 ## Assignment
+
 - For this assignment you have to create a new branch - **assignment/auth-3**
 - Your user document should look like this
+
 ```
  	{
     "_id" : ObjectId("6226e3d2b98f22b349ca58be"),
@@ -16,7 +19,7 @@
     "emailId" : "sk@gmail.com",
     "password" : "password123",
     "gender" : "female",
-	"isDeleted": false, //default value is false 
+	"isDeleted": false, //default value is false
     "age" : 12,
     "createdAt" : ISODate("2022-03-08T05:04:18.737Z"),
     "updatedAt" : ISODate("2022-03-08T05:04:18.737Z"),
@@ -24,12 +27,11 @@
 }
 ```
 
-
-- Write a POST api to register a user from the user details in request body. 
+- Write a POST api to register a user from the user details in request body.
 - Write a POST api to login a user that takes user details like email and password from the request body. If the credentials don't match with any user's data return a suitable error.
-On successful login, generate a JWT token and return it both in response body.
+  On successful login, generate a JWT token and return it both in response body.
 - Write a GET api to fetch user details. Pass the userId as path param in the url. Check that request must contain x-auth-token header. If absent, return a suitable error.
-If present, check that the token is valid.
+  If present, check that the token is valid.
 - Write a PUT api to update user details. Pass the userId as path param in the url and update the attributes received in the reauest body. Check that request must contain x-auth-token header. If absent, return a suitable error.
 - Write a DELETE api that takes the userId in the path params and marks the isDeleted attribute for a user as true. Check that request must contain x-auth-token header. If absent, return a suitable error.
 - Once, all the apis are working fine, move the authentication related code in a middleware called auth.js
@@ -41,5 +43,15 @@ If present, check that the token is valid.
 + Run this code and ensure the authorisation works fine for all the apis before following the next requirement
 + You now have to move this similar code in all the three apis in a suitable middleware
 
-``` 
+```
 
+POST /blogs
+Create a blog document from request body. Get authorId in request body only.
+
+Make sure the authorId is a valid authorId by checking the author exist in the authors collection.
+
+Return HTTP status 201 on a succesful blog creation. Also return the blog document. The response should be a JSON object like this
+
+Create atleast 5 blogs for each author
+
+Return HTTP status 400 for an invalid request with a response body like this
