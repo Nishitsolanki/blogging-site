@@ -25,8 +25,9 @@ const authors = async function (req, res) {
       return res.status(400).send({status:false, msg: "title is required" }); 
     }
 
-    if(!isValid(data.email)){
-      return res.status(400).send({status:false, msg: "email is required" }); 
+    if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(data.email)) {
+      res.status(400).send({status: false,message: `Email should be a valid email address`});
+      return;
     }
 
     if(!isValid(data.password)){
