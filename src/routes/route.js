@@ -7,7 +7,9 @@ router.get("/test-me", function (req, res) {
   res.send("My first ever api!");
 });
 
-//
+router.post("/authors", authorController.authors);
+
+//blogs
 router.post("/blogs", blogController.blogs);
 
 module.exports = router;
