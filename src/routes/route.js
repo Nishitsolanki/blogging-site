@@ -11,11 +11,18 @@ router.post("/authors", authorController.authors);
 
 //blogs
 router.post("/blogs", blogController.blogs);
-router.get("/blogs", blogController.getblogs);
-router.put("/blogs/:blogId", blogController.blogsUpdate);
-// deleted by blogId
 
+// get blogs
+router.get("/blogs", blogController.getblogs);
+
+// update blogs
+router.put("/blogs/:blogId", blogController.blogsUpdate);
+
+
+// deleted by blogId
 router.delete('/blogsby/:blogId', blogController.deleteBlogById)
+
+
 // delete by blog queryparams
 router.delete('/blogs' , blogController.deleteblog)
 

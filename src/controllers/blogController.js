@@ -58,6 +58,7 @@ exports.blogs = async function (req, res) {
         res.status(500).send({ ErrorName: err.name, ErrorMsg: err.message });
     }
 };
+// ------------get blogs---------------
 
 const getblogs = async function (req, res) {
     try {
@@ -84,6 +85,8 @@ const getblogs = async function (req, res) {
         return res.status(500).send({ msg: 'Error', error: err.message });
     }
 };
+
+// --------update blogs --------------
 exports.blogsUpdate = async function (req, res) {
     try {
         //If param value is undefined
@@ -209,7 +212,7 @@ const deleteblog = async function (req, res) {
 
 
 
-
+module.exports.getblogs = getblogs;
 module.exports.deleteBlogById = deleteBlogById
 module.exports.deleteblog = deleteblog
-module.exports.getblogs = getblogs;
+
