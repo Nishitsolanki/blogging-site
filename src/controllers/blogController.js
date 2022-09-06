@@ -39,16 +39,8 @@ exports.blogs = async function (req, res) {
             return res.status(400).send({ status: false, msg: "subcategory is required" });
         }
 
-        if (!isValid(blogBody.isPublished)) {
-            return res.status(400).send({ status: false, msg: "isPublished is required" });
-        }
-
         if (!isValid(blogBody.publishedAt)) {
             return res.status(400).send({ status: false, msg: "publishedAt is required" });
-        }
-
-        if (!isValid(blogBody.isDeleted)) {
-            return res.status(400).send({ status: false, msg: "isDeleted is required" });
         }
 
         if (!isValid(blogBody.deletedAt)) {
@@ -66,3 +58,16 @@ exports.blogs = async function (req, res) {
         res.status(500).send({ ErrorName: err.name, ErrorMsg: err.message });
     }
 };
+
+const getblogs= async function(req,res){
+    try{
+        //let data=req.Query.Params
+        //let catogory=data.category
+        let getData = await blogModel.find({category:{$in:"productivity"}},{});
+        res.status(201).send({ data: getData });
+
+    }catch(err){
+        res.status(500).send({ ErrorName: err.name, ErrorMsg: err.message });
+    }
+};
+module.exports.getblogs = getblogs;
