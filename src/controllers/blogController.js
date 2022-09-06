@@ -59,15 +59,30 @@ exports.blogs = async function (req, res) {
     }
 };
 
-const getblogs= async function(req,res){
-    try{
-        //let data=req.Query.Params
-        //let catogory=data.category
-        let getData = await blogModel.find({category:{$in:"productivity"}},{});
-        res.status(201).send({ data: getData });
+const getblogs = async function (req, res) {
+    try {
+        let obj = { isDeleted: false, isPublished: true };
+        // by author Id
+        let authorId = req.query.authorId
+        let category = req.query.category
+        let tags = req.query.tags
+        let subcategory = req.query.subcategory
 
-    }catch(err){
-        res.status(500).send({ ErrorName: err.name, ErrorMsg: err.message });
+        // applying filters
+        if (authorId) { obj.authorId = authorId }
+        if (category) { obj.category = category }
+        if (tags) { obj.tags = tags }
+        if (subcategory) { obj.subcategory = subcategory }
+
+        let savedData = await blogModel.find(obj);
+        if (savedData.length == 0) {
+            return res.status(404).send({ status: false, msg: 'blogs not found' });
+        }
+        return res.status(200).send({ data: savedData });
+    }
+    catch (err) {
+       return res.status(500).send({ msg: 'Error', error: err.message });
     }
 };
+
 module.exports.getblogs = getblogs;

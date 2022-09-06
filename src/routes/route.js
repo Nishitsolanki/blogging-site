@@ -11,5 +11,5 @@ router.post("/authors", authorController.authors);
 
 //blogs
 router.post("/blogs", blogController.blogs);
-router.get("/getblogs", blogController.getblogs);
+router.get("/blogs", blogController.getblogs);
 module.exports = router;
