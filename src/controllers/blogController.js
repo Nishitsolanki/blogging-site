@@ -84,5 +84,46 @@ const getblogs = async function (req, res) {
        return res.status(500).send({ msg: 'Error', error: err.message });
     }
 };
+exports.blogsUpdate = async function (req, res) {
+    try {
+      //If param value is undefined
+      let blogBody = req.body;
+      if (req.params.blogId == ":blogId") {
+        return res.status(400).send({ msg: "ID is madatory" });
+      }
+  
+      //Validating BlogId(Present/Not)
+  
+      let checkBlogId = await blogModel.findById(req.params.blogId);
+      if (!checkBlogId) {
+        return res.status(400).send({ msg: "Blog Id is Invalid" });
+      }
+  
+      //Allowing Only Whose Document Is Not Delected
+      if (checkBlogId.isDeleted == true) {
+        return res
+          .status(400)
+          .send({ msg: "if deleted is true deletedAt will have a date" });
+      }
+      //All Validation Working
+      //Upadting user Changes
+      else {
+        let blogUpdateData = await blogModel.findByIdAndUpdate(
+          {
+            _id: checkBlogId._id,
+          },
+          blogBody,
+          { new: true }
+        );
+        return res.status(201).send({ data: blogUpdateData });
+      }
+    } catch (err) {
+      res.status(500).send({
+        msg: "HTTP 500 Server Error",
+        ErrorName: err.name,
+        ErrorMessage: err.message,
+      });
+    }
+  };
 
 module.exports.getblogs = getblogs;

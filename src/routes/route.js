@@ -12,4 +12,6 @@ router.post("/authors", authorController.authors);
 //blogs
 router.post("/blogs", blogController.blogs);
 router.get("/blogs", blogController.getblogs);
+router.put("/blogs/:blogId", blogController.blogsUpdate);
+
 module.exports = router;
