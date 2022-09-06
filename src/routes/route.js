@@ -7,23 +7,22 @@ router.get("/test-me", function (req, res) {
   res.send("My first ever api!");
 });
 
+//creating Authors API
 router.post("/authors", authorController.authors);
 
-//blogs
+//creating Blogs API
 router.post("/blogs", blogController.blogs);
 
-// get blogs
+// Fetching blogsByFilter
 router.get("/blogs", blogController.getblogs);
 
-// update blogs
+//Updating Blogs
 router.put("/blogs/:blogId", blogController.blogsUpdate);
 
+// Deleted by blogId
+router.delete("/blogsby/:blogId", blogController.deleteBlogById);
 
-// deleted by blogId
-router.delete('/blogsby/:blogId', blogController.deleteBlogById)
-
-
-// delete by blog queryparams
-router.delete('/blogs' , blogController.deleteblog)
+// Delete by blog queryparams
+router.delete("/blogs", blogController.deleteblog);
 
 module.exports = router;
