@@ -205,7 +205,7 @@ const deleteblog = async function (req, res) {
 
     if (subcategoryname) {
       let deleteblog = await blogModel.findOneAndUpdate(
-        { subcategory: categoryname },
+        { subcategory: subcategoryname },
         { isDeleted: true },
         { new: true }
       );
@@ -221,6 +221,9 @@ const deleteblog = async function (req, res) {
       );
 
       return res.status(200).send({ status: true, data: deleteblog });
+    }else{
+      
+      return res.status(404).send("blog document doesn't exist");
     }
   } catch (error) {
     return res.status(500).send({ error: error.message });
