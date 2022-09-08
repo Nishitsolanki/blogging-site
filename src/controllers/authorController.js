@@ -58,12 +58,4 @@ const authors = async function (req, res) {
   }
 };
 
-
-
-  
-
-
-
-
 module.exports.authors = authors;
-
