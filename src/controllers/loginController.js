@@ -1,35 +1,33 @@
-const authorModel = require("../models/authorModel");
 const jwt = require("jsonwebtoken");
+const authorModel = require("../models/authorModel");
 
-exports.login = async function (req, res) {
+
+
+const login = async function (req, res) {
   try {
-    let checkEmailAndPassword = await authorModel.findOne({
-      email: req.body.email,
-      password: req.body.password,
-    });
-    console.log(checkEmailAndPassword);
-    //Validating Email And PassWord(present/Not)
-    if (!checkEmailAndPassword) {
-      return res.status(400).send({ msg: "Email and Password Are invalid" });
 
-      //creating Token
-    } else {
-      let payloadDetails = {
-        UserId: checkEmailAndPassword._id.toString(),
-        password: checkEmailAndPassword.password,
-        batch: "Plutonium",
-        Project: "Blogging - Site",
-        group: 30,
-      };
-      let Token = jwt.sign(payloadDetails, "FunctionUP-Project1-Group30");
+    let email = req.body.emailId;
+    let password = req.body.password;
 
-      res.header({ "x-api-key": Token });
 
-      return res
-        .status(201)
-        .send({ data: Token, userId: checkEmailAndPassword._id });
-    }
-  } catch (err) {
-    res.status(500).send({ msg: "Server error HTTP 500" });
+    let author = await authorModel.findOne({ emailId: email, password: password });
+    if (!author)
+      return res.status(400).send({ status: false, msg: "email or password is not corerct" });
+
+
+    let token = jwt.sign(
+      {
+        authorId: author._id.toString(),
+        batch: "plutonium",
+        organisation: "FUnctionUp",
+      },
+      "functionup-plutonium-group30"
+    );
+    res.setHeader("x-api-key", token);
+    res.status(201).send({ status: true, data: token, authorId: author._id });
   }
-};
+  catch (err) {
+    return res.status(500).send({ ErrorName: err.name, ErrorMessage: err.message });
+  }
+}
+module.exports.login = login

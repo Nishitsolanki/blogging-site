@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
-const moment = require("moment");
-
-//Globals
-
-let dateToday = moment();
 
 const isValid = function (value) {
   if (typeof value === "undefined" || value === Number || value === null)
@@ -165,6 +160,27 @@ exports.blogsUpdate = async function (req, res) {
   }
 };
 
+// -------------DELETE BY BOLGID ---------------
+const deleteBlogById = async function (req, res) {
+  try {
+    let blogId = req.params.blogId;
+    let blog = await blogModel.findById(blogId);
+    let data = blog.isDeleted;
+    console.log(data);
+    if (!blog) {
+      return res.status(404).send(" This is not  a valid blogId");
+    }
+
+    if (data == true) {
+      return res.status(404).send("blog document doesn't exist");
+    } else {
+      res.status(200).send({ status: 200 });
+    }
+  } catch (err) {
+    res.status(500).send({ ErrorName: err.name, ErrorMsg: err.message });
+  }
+};
+
 // -------------DELETE BY QUERY PARAMS --------------
 const deleteblog = async function (req, res) {
   try {
@@ -224,7 +240,8 @@ const deleteblog = async function (req, res) {
       );
 
       return res.status(200).send({ status: true, data: deleteblog });
-    } else {
+    }else{
+
       return res.status(404).send("blog document doesn't exist");
     }
   } catch (error) {
