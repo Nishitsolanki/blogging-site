@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
 const authorModel = require("../models/authorModel");
+const jwt = require("jsonwebtoken");
 
 exports.login = async function (req, res) {
   try {
@@ -7,6 +7,7 @@ exports.login = async function (req, res) {
       email: req.body.email,
       password: req.body.password,
     });
+    console.log(checkEmailAndPassword);
     //Validating Email And PassWord(present/Not)
     if (!checkEmailAndPassword) {
       return res.status(400).send({ msg: "Email and Password Are invalid" });
@@ -21,6 +22,7 @@ exports.login = async function (req, res) {
         group: 30,
       };
       let Token = jwt.sign(payloadDetails, "FunctionUP-Project1-Group30");
+
       res.header({ "x-api-key": Token });
 
       return res
