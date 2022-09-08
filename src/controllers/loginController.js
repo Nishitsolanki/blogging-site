@@ -14,7 +14,7 @@ exports.login = async function (req, res) {
       //creating Token
     } else {
       let payloadDetails = {
-        UserId: checkEmailAndPassword._id.toString(),
+        authorId: checkEmailAndPassword._id.toString(),
         password: checkEmailAndPassword.password,
         batch: "Plutonium",
         Project: "Blogging - Site",
@@ -25,7 +25,7 @@ exports.login = async function (req, res) {
 
       return res
         .status(201)
-        .send({ data: Token, userId: checkEmailAndPassword._id });
+        .send({ data: Token, authorId: checkEmailAndPassword._id });
     }
   } catch (err) {
     res.status(500).send({ msg: "Server error HTTP 500" });

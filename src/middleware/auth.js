@@ -5,12 +5,12 @@ exports.headerCheck = function (req, res, next) {
   try {
     let headerData = req.headers["x-api-key"];
     if (headerData === undefined) {
-      return res.send({ msg: "Header Is Madtory" });
+      return res.status(400).send({ msg: "Header Is Madtory" });
     } else {
       next();
     }
   } catch (err) {
-    res.status(500).send({ msg: "Server Error 500" });
+    return res.status(500).send({ msg: "Server Error 500" });
   }
 };
 
@@ -21,12 +21,12 @@ exports.authentication = function (req, res, next) {
     let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30");
 
     if (tokenVerify.UserId !== req.query.authorId) {
-      return res.status(404).send({ msg: "User is Imposter" });
+      return res.status(403).send({ msg: "User is Imposter" });
     } else {
       next();
     }
   } catch (err) {
-    res.status(500).send({ msg: "Server Error 500" });
+    return res.status(500).send({ msg: "Server Error 500" });
   }
 };
 
@@ -38,7 +38,7 @@ exports.blogIdPlusAuthorIdCheck = async function (req, res, next) {
     //
     let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30");
     if (tokenVerify.UserId !== req.query.authorId) {
-      return res.status(404).send({ msg: "User is Imposter" });
+      return res.status(403).send({ msg: "User is not Autherized" });
     }
     //First  Checking BlogID(Valid/Not)
     if (req.params.blogId == ":blogId") {
@@ -52,7 +52,7 @@ exports.blogIdPlusAuthorIdCheck = async function (req, res, next) {
     //Second Verifying User BY theri AUTHORID
     else {
       if (req.query.authorId != checkBlogId.authorId) {
-        return res.status(404).send({ msg: "AuthorID is Not Matched" });
+        return res.status(403).send({ msg: "AuthorID is Not Matched" });
       } else {
         next();
       }

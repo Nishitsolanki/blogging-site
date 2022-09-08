@@ -18,36 +18,16 @@ router.post("/authors", authorController.authors);
 router.post("/blogs", blogController.blogs);
 
 // Fetching blogsByFilter
-router.get(
-  "/blogs",
-  middleware.headerCheck,
-  middleware.authentication,
-  blogController.getblogs
-);
+router.get("/blogs", middleware.headerCheck, middleware.authentication, blogController.getblogs);
 
 //Updating Blogs
-router.put(
-  "/blogs/:blogId",
-  middleware.headerCheck,
-  middleware.authentication,
-  blogController.blogsUpdate
-);
+router.put("/blogs/:blogId", middleware.headerCheck, middleware.blogIdPlusAuthorIdCheck, blogController.blogsUpdate);
 
 // Deleted by blogId
-router.delete(
-  "/blogsby/:blogId",
-  middleware.headerCheck,
-  middleware.authentication,
-  blogController.deleteBlogById
-);
+router.delete("/blogsby/:blogId", middleware.headerCheck, middleware.blogIdPlusAuthorIdCheck, blogController.deleteBlogById);
 
 // Delete by blog queryparams
-router.delete(
-  "/blogs",
-  middleware.headerCheck,
-  middleware.authentication,
-  blogController.deleteblog
-);
+router.delete("/blogs", middleware.headerCheck, middleware.authentication, blogController.deleteblog);
 
 //login UserByEmailAndPassword
 router.post("/login", logInController.login);
