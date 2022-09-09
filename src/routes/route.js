@@ -15,7 +15,7 @@ router.get("/test-me", function (req, res) {
 router.post("/authors", authorController.authors);
 
 //creating Blogs API
-router.post("/blogs", blogController.blogs);
+router.post("/blogs", middleware.authentication, blogController.blogs);
 
 // Fetching blogsByFilter
 router.get("/blogs", middleware.headerCheck, middleware.authentication, blogController.getblogs);

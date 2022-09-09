@@ -5,12 +5,12 @@ exports.headerCheck = function (req, res, next) {
   try {
     let headerData = req.headers["x-api-key"];
     if (headerData === undefined) {
-      return res.status(400).send({ msg: "Header Is Madtory" });
+      return res.status(400).send({status:false, msg: "Header Is Madtory" });
     } else {
       next();
     }
   } catch (err) {
-    return res.status(500).send({ msg: "Server Error 500" });
+    return res.status(500).send({ status:false,msg: "Server Error 500" });
   }
 };
 
@@ -21,12 +21,12 @@ exports.authentication = function (req, res, next) {
     let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30");
 
     if (tokenVerify.UserId !== req.query.authorId) {
-      return res.status(403).send({ msg: "User is Imposter" });
+      return res.status(403).send({status:false, msg: "User is not logged in" });
     } else {
       next();
     }
   } catch (err) {
-    return res.status(500).send({ msg: "Server Error 500" });
+    return res.status(500).send({status:false, msg: "Server Error 500" });
   }
 };
 
@@ -38,26 +38,26 @@ exports.blogIdPlusAuthorIdCheck = async function (req, res, next) {
     //
     let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30");
     if (tokenVerify.UserId !== req.query.authorId) {
-      return res.status(403).send({ msg: "User is not Autherized" });
+      return res.status(403).send({status:false, msg: "User is not Autherized" });
     }
     //First  Checking BlogID(Valid/Not)
     if (req.params.blogId == ":blogId") {
-      return res.status(400).send({ msg: "BlogID Cant Be Empty" });
+      return res.status(400).send({ status:false,msg: "BlogID Cant Be Empty" });
     }
     let checkBlogId = await blogModel.findById(req.params.blogId);
     if (!checkBlogId) {
-      return res.status(400).send({ msg: "Blog Id is Invalid" });
+      return res.status(400).send({status:false, msg: "Blog Id is Invalid" });
     }
 
     //Second Verifying User BY theri AUTHORID
     else {
       if (req.query.authorId != checkBlogId.authorId) {
-        return res.status(403).send({ msg: "AuthorID is Not Matched" });
+        return res.status(403).send({status:false, msg: "AuthorID is Not Matched" });
       } else {
         next();
       }
     }
   } catch (err) {
-    return res.status(500).send({ msg: "Server Error 500" });
+    return res.status(500).send({ status:false,msg: "Server Error 500" });
   }
 };
