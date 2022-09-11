@@ -7,7 +7,7 @@ exports.headerCheck = function (req, res, next) {
     if (headerData === undefined) {
       return res.status(400).send({status:false, msg: "Header Is Madtory" });
     } else {
-      next();
+      return next();
     }
   } catch (err) {
     return res.status(500).send({ status:false,msg: "Server Error 500" });
@@ -18,13 +18,25 @@ exports.headerCheck = function (req, res, next) {
 exports.authentication = function (req, res, next) {
   try {
     let Token = req.headers["x-api-key"];
-    let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30");
+    if(!Token)
+      return res.status(400).send({status:false, msg: "login is requred" });
+    
+    let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30"); 
 
-    if (tokenVerify.UserId !== req.query.authorId) {
+    if(req.query.authorId){
+    if (tokenVerify.userId !== req.query.authorId) {
       return res.status(403).send({status:false, msg: "User is not logged in" });
     } else {
-      next();
-    }
+     return next();
+    }}
+
+    if(req.body.authorId){
+      if (tokenVerify.userId !== req.body.authorId) {
+        return res.status(403).send({status:false, msg: "author was not created and authorId is invaild !!!" });
+      } else {
+       return next();
+      }}
+   return next()
   } catch (err) {
     return res.status(500).send({status:false, msg: "Server Error 500" });
   }
@@ -32,12 +44,13 @@ exports.authentication = function (req, res, next) {
 
 //Only For Path And Delete
 
-exports.blogIdPlusAuthorIdCheck = async function (req, res, next) {
+exports.authorization = async function (req, res, next) {
   try {
     let Token = req.headers["x-api-key"];
     //
     let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30");
-    if (tokenVerify.UserId !== req.query.authorId) {
+    
+    if (tokenVerify.userId !== req.query.authorId) {
       return res.status(403).send({status:false, msg: "User is not Autherized" });
     }
     //First  Checking BlogID(Valid/Not)
@@ -61,3 +74,4 @@ exports.blogIdPlusAuthorIdCheck = async function (req, res, next) {
     return res.status(500).send({ status:false,msg: "Server Error 500" });
   }
 };
+

@@ -42,6 +42,12 @@ const authors = async function (req, res) {
       return res.status(400).send({ status: false, msg: "password is required" });
     }
     
+
+    // Validation Enum
+    if (data.title !== "Mr" && data.title !== "Mrs" && data.title !== "Miss")
+     return res.status(400).send({ status: false, msg: "title should be Mr, Mrs or Miss" })
+
+    
     //If All Working Fine
     else {
       let savedData = await authorModel.create(data);
