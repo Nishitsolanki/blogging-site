@@ -37,6 +37,9 @@ const authors = async function (req, res) {
       return;
     }
 
+    let emailCheck = await authorModel.findOne(req.email);
+    if (emailCheck) {res.status(409).send({ status: false, msg: "This email already exists." });}
+
     //Validating password(Madtory)
     if (!isValid(data.password)) {
       return res.status(400).send({ status: false, msg: "password is required" });

@@ -1,18 +1,5 @@
 const jwt = require("jsonwebtoken");
 const blogModel = require("../models/blogModel");
-//Checking Header-Value in (Present/Not)
-exports.headerCheck = function (req, res, next) {
-  try {
-    let headerData = req.headers["x-api-key"];
-    if (headerData === undefined) {
-      return res.status(400).send({status:false, msg: "Header Is Madtory" });
-    } else {
-      return next();
-    }
-  } catch (err) {
-    return res.status(500).send({ status:false,msg: "Server Error 500" });
-  }
-};
 
 //Authentication Part
 exports.authentication = function (req, res, next) {
@@ -22,56 +9,31 @@ exports.authentication = function (req, res, next) {
       return res.status(400).send({status:false, msg: "login is requred" });
     
     let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30"); 
-
-    if(req.query.authorId){
-    if (tokenVerify.userId !== req.query.authorId) {
-      return res.status(403).send({status:false, msg: "User is not logged in" });
-    } else {
-     return next();
-    }}
-
-    if(req.body.authorId){
-      if (tokenVerify.userId !== req.body.authorId) {
-        return res.status(403).send({status:false, msg: "author was not created and authorId is invaild !!!" });
-      } else {
-       return next();
-      }}
    return next()
   } catch (err) {
     return res.status(500).send({status:false, msg: "Server Error 500" });
   }
 };
 
-//Only For Path And Delete
-
 exports.authorization = async function (req, res, next) {
   try {
     let Token = req.headers["x-api-key"];
-    //
-    let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30");
+    if(!Token)
+      return res.status(400).send({status:false, msg: "login is requred" });
     
-    if (tokenVerify.userId !== req.query.authorId) {
-      return res.status(403).send({status:false, msg: "User is not Autherized" });
+    let tokenVerify = jwt.verify(Token, "FunctionUP-Project1-Group30"); 
+    req.headers.authorId = tokenVerify.authorId;
+
+    let checkBlogId = await blogModel.findOne({_id:req.params.blogId});
+    if(!checkBlogId){
+      return res.status(403).send({status:false, msg: "blogid is wrong"});
     }
-    //First  Checking BlogID(Valid/Not)
-    if (req.params.blogId == ":blogId") {
-      return res.status(400).send({ status:false,msg: "BlogID Cant Be Empty" });
-    }
-    let checkBlogId = await blogModel.findById(req.params.blogId);
-    if (!checkBlogId) {
-      return res.status(400).send({status:false, msg: "Blog Id is Invalid" });
+    if(tokenVerify.userId !=checkBlogId.authorId){
+      return res.status(403).send({status:false, msg: "not authorised"});
     }
 
-    //Second Verifying User BY theri AUTHORID
-    else {
-      if (req.query.authorId != checkBlogId.authorId) {
-        return res.status(403).send({status:false, msg: "AuthorID is Not Matched" });
-      } else {
-        next();
-      }
-    }
+   return next()
   } catch (err) {
-    return res.status(500).send({ status:false,msg: "Server Error 500" });
+    return res.status(500).send({status:false, msg: "Server Error 500" });
   }
 };
-

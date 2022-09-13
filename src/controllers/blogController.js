@@ -19,6 +19,8 @@ const isValid = function (value) {
 exports.blogs = async function (req, res) {
   try {
     let blogBody = req.body;
+    blogBody.publishedAt = dateToday.format("YYYY-MM-DD");
+
 
     //Validating empty Doc
     if (Object.keys(blogBody).length == 0) {
@@ -58,6 +60,7 @@ exports.blogs = async function (req, res) {
 
     //all Working Fine (then else)
     else {
+
       let blogData = await blogModel.create(blogBody);
       res.status(201).send({ status: true, data: blogData });
     }
@@ -160,17 +163,23 @@ const deleteBlogById = async function (req, res) {
     let blog = await blogModel.findById(blogId);
     let data = blog.isDeleted;
     //console.log(data);
-    if (!blog) {
-      return res.status(404).send({ status: false, msg: " This is not  a valid blogId" });
-    }
 
     if (data == true) {
-      return res.status(404).send({ status: false, msg: "blog document doesn't exist" });
+      return res.status(404).send("blog document doesn't exist");
     } else {
-      res.status(200).send({ status: true });
+      //New Changes (Remove this Comment After Doing Changes )
+      let markDelete = await blogModel.updateOne(
+        { _id: blog._id },
+        { isDeleted: true },
+        { new: true }
+        //
+      );
+      res.status(200).send({ status: true, status: 200 });
     }
   } catch (err) {
-    res.status(500).send({ status: false, ErrorName: err.name, ErrorMsg: err.message });
+    res
+      .status(500)
+      .send({ status: false, ErrorName: err.name, ErrorMsg: err.message });
   }
 };
 
@@ -209,9 +218,13 @@ const deleteblog = async function (req, res) {
     if (Object.keys(obj).length === 0) {
       return res.status(404).send({ status: false, msg: "blogs not found" });
     }
-
-    let savedData = await blogModel.updateMany(obj, { isDeleted: true }, { new: true });
+    let saData = await blogModel.updateMany(obj);
+    if (saData.isDeleted == true) {
+  
+    let savedData = await blogModel.updateMany(obj, { isDeleted: true });
     return res.status(200).send({ status: true, data: savedData });
+  }
+  return res.status(400).send({ status: false, msg: "This Document is Already Deleted" });
   } catch (error) {
     return res.status(500).send({ status: false, error: error.message });
   }
@@ -220,3 +233,4 @@ const deleteblog = async function (req, res) {
 module.exports.getblogs = getblogs;
 module.exports.deleteBlogById = deleteBlogById;
 module.exports.deleteblog = deleteblog;
+
