@@ -33,31 +33,31 @@ const authors = async function (req, res) {
 
     //Validating Email using regex(Madtory)
     if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(data.email)) {
-      res.status(400).send({status: false,message: `Email should be a valid email address`,});
+      res.status(400).send({ status: false, message: `Email should be a valid email address`, });
       return;
     }
 
     let emailCheck = await authorModel.findOne(req.email);
-    if (emailCheck) {res.status(409).send({ status: false, msg: "This email already exists." });}
+    if (emailCheck) { res.status(409).send({ status: false, msg: "This email already exists." }); }
 
     //Validating password(Madtory)
     if (!isValid(data.password)) {
       return res.status(400).send({ status: false, msg: "password is required" });
     }
-    
+
 
     // Validation Enum
     if (data.title !== "Mr" && data.title !== "Mrs" && data.title !== "Miss")
-     return res.status(400).send({ status: false, msg: "title should be Mr, Mrs or Miss" })
+      return res.status(400).send({ status: false, msg: "title should be Mr, Mrs or Miss" })
 
-    
+
     //If All Working Fine
     else {
       let savedData = await authorModel.create(data);
-      res.status(201).send({status:true, msg: savedData });
+      res.status(201).send({ status: true, msg: savedData });
     }
   } catch (err) {
-    return res.status(500).send({status:false, ErrorName: err.name, ErrorMessage: err.message });
+    return res.status(500).send({ status: false, ErrorName: err.name, ErrorMessage: err.message });
   }
 };
 

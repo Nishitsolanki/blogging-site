@@ -168,12 +168,7 @@ const deleteBlogById = async function (req, res) {
       return res.status(404).send("blog document doesn't exist");
     } else {
       //New Changes (Remove this Comment After Doing Changes )
-      let markDelete = await blogModel.updateOne(
-        { _id: blog._id },
-        { isDeleted: true },
-        { new: true }
-        //
-      );
+      let markDelete = await blogModel.updateOne({ _id: blog._id },{ isDeleted: true },{ new: true });
       res.status(200).send({ status: true, status: 200 });
     }
   } catch (err) {
@@ -220,11 +215,11 @@ const deleteblog = async function (req, res) {
     }
     let saData = await blogModel.updateMany(obj);
     if (saData.isDeleted == true) {
-  
-    let savedData = await blogModel.updateMany(obj, { isDeleted: true });
-    return res.status(200).send({ status: true, data: savedData });
-  }
-  return res.status(400).send({ status: false, msg: "This Document is Already Deleted" });
+
+      let savedData = await blogModel.updateMany(obj, { isDeleted: true });
+      return res.status(200).send({ status: true, data: savedData });
+    }
+    return res.status(400).send({ status: false, msg: "This Document is Already Deleted" });
   } catch (error) {
     return res.status(500).send({ status: false, error: error.message });
   }
